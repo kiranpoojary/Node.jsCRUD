@@ -5,6 +5,7 @@ const path=require("path")
 const bodyparser=require("body-parser")
 const app=express()
 const userController=require("./controllers/userData.controller")
+const anotherController=require("./controllers/userAddAnother.controller")
 
 
 app.set("view engine","hbs")
@@ -32,6 +33,8 @@ app.get("/addUsers",(req,res)=>{
 })
 
 app.use("/users",userController)
+
+app.use("/appiee",anotherController)
 
 app.listen("3000",()=>{
     console.log("Server Started")
