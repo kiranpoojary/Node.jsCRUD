@@ -4,7 +4,6 @@ const router=express.Router();
 
 const userModel=mongoose.model("users");
 
-
 router.get("/showKiran",(req,res)=>{
     userModel.find({'userName':'Kiran Poojary'},'userName userId userType',(err,docs)=>{
         if(!err)
