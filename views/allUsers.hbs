@@ -1,0 +1,17 @@
+<table>
+    <tr>
+        <th>User Name</th>
+        <th>User Id</th>
+        <th>Password</th>
+        <th>User Type</th>
+    </tr>
+
+    {{#each data}}
+    <tr>
+    <td>{{this.userName}}</td>
+    <td>{{this.userId}}</td>
+    <td>{{this.password}}</td>
+    <td>{{this.userType}}</td>
+    </tr>
+        {{/each}}
+</table>
