@@ -7,13 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon appStart.js"
   },
-  "author": "",
+  "author": "Kiran Poojary",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.5.2",
     "express": "^4.17.1",
     "express-handlebars": "^5.1.0",
-    "mongoose": "^5.10.2",
+    "mongoose": "^5.10.3",
     "nodemon": "^2.0.4"
   }
 }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+
+    <link href="/customStyle/loginStyle.css" rel="stylesheet" id="custom-css">
+    <script>
+        function loginClick() {
+            document.getElementById("login").style.display = "block";
+            document.getElementById("register").style.display = "none";
+            document.getElementById("home-tab").className = "nav-link active"
+            document.getElementById("profile-tab").className = "nav-link "
+
+
+        }
+
+        function registerClick() {
+            document.getElementById("login").style.display = "none";
+            document.getElementById("register").style.display = "block";
+            document.getElementById("home-tab").className = "nav-link "
+            document.getElementById("profile-tab").className = "nav-link active"
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+
+
+
+
+    {{#if firstGet }}
+    <script></script>
+    {{else}}
+    <script>alert("Invalid UserID/Password")</script>
+    {{/if}}
+
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
+                <h3>Welcome To</h3><br>
+                <h3>India Mart</h3>
+
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" onclick="loginClick()" href="#home"
+                            role="tab" aria-controls="home" aria-selected="true">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" onclick="registerClick()" href="#profile"
+                            role="tab" aria-controls="profile" aria-selected="false">Register</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
+                        <form action="/user/login/logData" method="POST">
+                            <h3 class=" register-heading">Login</h3>
+                            <div class="row register-form">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="userID"
+                                            placeholder="UserID/Email *" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" name="password"
+                                            placeholder="Password *" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="submit" class="btnRegister" value="Login" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade show" id="register" role="tabpanel" aria-labelledby="profile-tab">
+                        <form action="/user/login/regData" method="POST">
+                            <h3 class="register-heading">Regitration</h3>
+                            <div class="row register-form">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="fName" placeholder="First Name *"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="lName" placeholder="Last Name *"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="email" placeholder="Email *"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        {{!-- maxlength="10" minlength="10" --}}
+                                        <input type="text" name="mobile" class="form-control" placeholder="Phone *"
+                                            required />
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="password" name="psw" class="form-control" placeholder="Password *"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="cpsw" class="form-control"
+                                            placeholder="Confirm Password *" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" name="secQ" required>
+                                            {{!-- <option disabled="true">Please select your Sequrity
+                                                Question
+                                            </option> --}}
+                                            <option>What is your Birthdate?</option>
+                                            <option>What is Your old Phone Number</option>
+                                            <option>What is your Pet Name?</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="secA" class="form-control" placeholder="`Answer *"
+                                            required />
+                                    </div>
+                                    <input type="submit" class="btnRegister" value="Register" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

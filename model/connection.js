@@ -1,5 +1,5 @@
 const mongoConnection=require("mongoose")
-mongoConnection.connect("mongodb://localhost:27017/mydb",{useNewUrlParser: true , useUnifiedTopology: true },(err)=>{
+mongoConnection.connect("mongodb://localhost:27017/indiamart",{useNewUrlParser: true , useUnifiedTopology: true },(err)=>{
     if(!err)
     {
         console.log("Db connected")
@@ -9,5 +9,6 @@ mongoConnection.connect("mongodb://localhost:27017/mydb",{useNewUrlParser: true 
     }
 })
 
-const userModel=require("./userData.model")
+//const u=require("./userData.model")
+const indiaMartModel=require("./users.model")
 
