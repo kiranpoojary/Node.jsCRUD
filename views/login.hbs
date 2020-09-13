@@ -22,21 +22,31 @@
             document.getElementById("profile-tab").className = "nav-link active"
         }
 
-
-
     </script>
 </head>
 
 <body>
 
-
-
-
-    {{#if firstGet }}
-    <script></script>
-    {{else}}
+    {{#if loginFailed }}
     <script>alert("Invalid UserID/Password")</script>
     {{/if}}
+
+    {{#if regSuccess}}
+    <script>alert("Registration Successful please login")</script>
+    {{/if}}
+
+    {{#if regFailed }}
+    <script>alert("Something wrong while registering !please try again")</script>
+    {{/if}}
+
+    {{#if exist }}
+    <script>alert("UserID alredy Exist ") </script>
+    {{/if}}
+
+    {{#if error}}
+    <script>alert("ERROR " + errorMessagge)</script>
+    {{/if}}
+
 
     <div class="container register">
         <div class="row">
@@ -59,7 +69,7 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
-                        <form action="/user/login/logData" method="POST">
+                        <form action="/login/logData" method="POST">
                             <h3 class=" register-heading">Login</h3>
                             <div class="row register-form">
                                 <div class="col-md-8">
@@ -80,7 +90,7 @@
                     </div>
 
                     <div class="tab-pane fade show" id="register" role="tabpanel" aria-labelledby="profile-tab">
-                        <form action="/user/login/regData" method="POST">
+                        <form action="/login/regData" method="POST">
                             <h3 class="register-heading">Regitration</h3>
                             <div class="row register-form">
                                 <div class="col-md-6">
