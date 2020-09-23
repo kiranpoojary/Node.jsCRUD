@@ -3,6 +3,7 @@ const session = require("express-session");
 const router = express.Router();
 const mongoose = require("mongoose");
 const usersModel = new mongoose.model("users");
+const productModel = new mongoose.model("products")
 
 var sess;
 
@@ -30,11 +31,15 @@ router.post("/logData", (req, res) => {
                 //user is a admin
                 sess.admin = true;
                 sess.logged = true;
-                res.render("admin/indexAdmin.hbs", { title: "SHOP-Admin" });
+                res.render("admin/indexAdmin", { saved: false, notSaved: false })
               } else {
                 //else user is a Customer
                 sess.admin = false;
                 sess.logged = true;
+                var homeContent = getHomeContent(function (data) {
+                  console.log(data);
+                })
+                console.log(homeContent);
                 res.render("index", { title: "HOME-SHOP" });
               }
             } else {
@@ -127,5 +132,16 @@ router.post("/regData", (req, res) => {
     }
   });
 });
+
+
+function getHomeContent(dataSender) {
+  productModel.find({ "productDetails.brand": 'Apple' }, function (err, docs) {
+    if (!err) {
+      return dataSender(docs)
+    } else {
+      return false;
+    }
+  });
+}
 
 module.exports = router;

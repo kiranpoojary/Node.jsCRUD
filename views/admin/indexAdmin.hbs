@@ -9,12 +9,55 @@
     <script src="/customScript/adminIndexScript.js"></script>
     <link rel="stylesheet" href="/customStyle/adminIndexStyle.css">
 
+
 </head>
 
 <body>
     {{> adminHeader}}
+
+    {{#if saved }}
+    <script>
+        Swal.fire({
+            title: 'Success',
+            text: "Product successfuly Added",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Okay'
+        }).then((result) => {
+            if (result.value) {
+
+                window.location.href = "indexAdmin.hbs"
+            } else {
+
+            }
+        })
+    </script>
+    {{/if}}
+
+    {{#if notSaved}}
+    <script>
+        Swal.fire({
+            title: 'Failed',
+            text: "Something went wrong while adding product",
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Okay'
+        }).then((result) => {
+            if (result.value) {
+
+                window.location.href = "indexAdmin.hbs"
+            } else {
+
+            }
+        })
+    </script>
+    {{/if}}
+
+
     <div id="add" style="justify-self: center;">
-        <form action="/manage/product" method="POST" name="adder" enctype="multipart/form-data">
+        <form action="/admin/product" method="POST" name="adder" enctype="multipart/form-data">
             <H2 style="color: rgb(209, 44, 3);">Product Details</H2>
             <div class="form-row">
                 <div class="col-md-3 mb-3">
@@ -32,11 +75,22 @@
                     <label for="validationServer023">Brand</label>
                     <select name="brand" class="form-control">
                         <option value="Apple">Apple</option>
+                        <option value="Asus">Asus</option>
+                        <option value="Coolpad">Coolpad</option>
+                        <option value="Intex">Intex</option>
+                        <option value="Karbonn">Karbonn</option>
+                        <option value="Lava">Lava</option>
                         <option value="Lenovo">Lenovo</option>
-                        <option value="Vivo">Viv</option>
-                        <option value="Redmi">Redmi</option>
-                        <option value="Samsung">Samsung</option>
-                        <option value="Others">Otherts</option>
+                        <option value="LG">LG</option>
+                        <option value="Micromax">Micromax</option>
+                        <option value="Moto">Moto</option>
+                        <option value="Nokia">Nokia</option>
+                        <option value="Oppo">Oppo</option>
+                        <option value="Samsung">VivoSamsung</option>
+                        <option value="Sony">Sony</option>
+                        <option value="Vivo">Vivo</option>
+                        <option value="Xiaomi">Xiaomi</option>
+
                     </select>
 
                 </div>
@@ -49,6 +103,79 @@
                     </div>
                 </div>
             </div>
+
+
+            <H2 style="color: rgb(209, 44, 3);">Price and Discount Details</H2>
+            <div class="form-row">
+                <div class="col-md-3 mb-3">
+                    <label for="validationServer013">Price</label>
+                    <input type="text" class="form-control" name="price" id="validationServer013" placeholder="Price">
+                </div>
+            </div>
+            <div class="col-md-6 column">
+                <table class="table table-bordered table-hover" id="tab_logic">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Discount Name</th>
+                            <th class="text-center">Discount Rate(in %)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id='row1'>
+                            <td>1</td>
+                            <td>
+                                <input type="text" name='dn1' id="dn1" onchange="" placeholder='Enter Discount Name'
+                                    class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="100" value="0" name='dr1' id="dr1"
+                                    placeholder='Enter Rate' onchange="discountChange1('dn1','dr1','row2')"
+                                    class="form-control" />
+                            </td>
+                        </tr>
+
+
+                        <tr id='row2' style="display: none;">
+                            <td>2</td>
+                            <td>
+                                <input type="text" id="dn2" name='dn2' placeholder='Enter Discount Name'
+                                    class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="100" onchange="discountChange1('dn2','dr2','row3')"
+                                    value="0" id="dr2" name='dr2' placeholder='Enter Rate' class="form-control" />
+                            </td>
+                        </tr>
+
+
+                        <tr id='row3' style="display: none;">
+                            <td>3</td>
+                            <td>
+                                <input type="text" name='dn3' id="dn3" placeholder='Enter Discount Name'
+                                    class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="100" onchange="discountChange1('dn3','dr3','row4')"
+                                    value="0" onchange="checkPrevious()" name='dr3' id="dr3" placeholder='Enter Rate'
+                                    class="form-control" />
+                            </td>
+                        </tr>
+                        <tr id='row4' style="display: none;">
+                            <td>4</td>
+                            <td>
+                                <input type="text" name='dn4' id="dn4" placeholder='Enter Discount Name'
+                                    class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="100" value="0" onchange="checkPrevious()" name='dr4'
+                                    id="dr4" placeholder='Enter Rate' class="form-control" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
 
             <H2 style="color: rgb(209, 44, 3);">Memory Details</H2>
             <div class="form-row">
@@ -196,18 +323,18 @@
             <H2 style="color: rgb(209, 44, 3);">Processor Details</H2>
             <div class="form-row">
                 <div class="col-md-3 mb-3">
-                    <label for="validationServer013">Processor</label>
-                    <input type="text" class="form-control " id="validationServer013" placeholder="Product Category">
-
+                    <label for="validationServer013">Processor Name</label>
+                    <input type="text" name="processorName" class="form-control " id="validationServer013"
+                        placeholder="Product Category">
                 </div>
-
             </div>
 
 
 
             <div class="form-group">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input is-invalid" id="invalidCheck33">
+                    <input type="checkbox" class="custom-control-input is-invalid" value="confirmed" name="confirmed"
+                        id="invalidCheck33" required>
                     <label class="custom-control-label" for="invalidCheck33">Yes,I have verified all details are
                         correct</label>
                     <div class="invalid-feedback">
