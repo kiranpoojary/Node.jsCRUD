@@ -9,7 +9,6 @@
     <script src="/customScript/adminIndexScript.js"></script>
     <link rel="stylesheet" href="/customStyle/adminIndexStyle.css">
 
-
 </head>
 
 <body>
@@ -27,7 +26,6 @@
         }).then((result) => {
             if (result.value) {
 
-                window.location.href = "indexAdmin.hbs"
             } else {
 
             }
@@ -47,7 +45,7 @@
         }).then((result) => {
             if (result.value) {
 
-                window.location.href = "indexAdmin.hbs"
+
             } else {
 
             }
@@ -57,6 +55,11 @@
 
 
     <div id="add" style="justify-self: center;">
+        <form action="/admin/product/addBrand" method="GET">
+            <input type="submit" class="btn btn-primary" value="add new brand/model">
+        </form>
+        <br>
+
         <form action="/admin/product" method="POST" name="adder" enctype="multipart/form-data">
             <H2 style="color: rgb(209, 44, 3);">Product Details</H2>
             <div class="form-row">
@@ -64,43 +67,32 @@
 
                     <label for="validationServer013">Product Category</label>
                     <select name="cat" class="form-control">
-                        <option value="Mobile">Mobile</option>
-                        <option value="Laptop">Laptop</option>
-                        <option value="iPad">iPad</option>
-                        <option value="Others">Others</option>
+                        <option value="MOBILE">MOBILE</option>
+                        <option value="LAPTOP" LAPTOP</option>
+                        <option value="I-PAD">I-PAD</option>
+                        <option value="OTHER">OTHER</option>
                     </select>
 
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="validationServer023">Brand</label>
                     <select name="brand" class="form-control">
-                        <option value="Apple">Apple</option>
-                        <option value="Asus">Asus</option>
-                        <option value="Coolpad">Coolpad</option>
-                        <option value="Intex">Intex</option>
-                        <option value="Karbonn">Karbonn</option>
-                        <option value="Lava">Lava</option>
-                        <option value="Lenovo">Lenovo</option>
-                        <option value="LG">LG</option>
-                        <option value="Micromax">Micromax</option>
-                        <option value="Moto">Moto</option>
-                        <option value="Nokia">Nokia</option>
-                        <option value="Oppo">Oppo</option>
-                        <option value="Samsung">VivoSamsung</option>
-                        <option value="Sony">Sony</option>
-                        <option value="Vivo">Vivo</option>
-                        <option value="Xiaomi">Xiaomi</option>
-
+                        {{#each brands}}
+                        <option value="{{brandName}}">{{brandName}}</option>
+                        {{/each}}
                     </select>
 
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="validationServerUsername33">Model</label>
-                    <div class="input-group">
+                    <label for="validationServer023">Brand</label>
+                    <select name="model" class="form-control">
+                        {{#each brands}}
+                        {{#each this.brandModels}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                        {{/each}}
+                    </select>
 
-                        <input type="text" name="model" class="form-control " id="validationServerUsername33"
-                            placeholder="Model" aria-describedby="inputGroupPrepend33">
-                    </div>
                 </div>
             </div>
 
@@ -134,7 +126,6 @@
                                     class="form-control" />
                             </td>
                         </tr>
-
 
                         <tr id='row2' style="display: none;">
                             <td>2</td>

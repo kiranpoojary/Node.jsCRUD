@@ -8,5 +8,6 @@ mongoConnection.connect("mongodb://localhost:27017/indiamart", { useNewUrlParser
 })
 
 //const u=require("./userData.model")
-const indiaMartModel1 = require("./users.model")
-const indiaMartModel2 = require("./product.model")
+const userindiaMart = require("./users.model")
+const productindiaMartModel = require("./product.model")
+const brandindiaMart = require("./brand.model")

@@ -7,11 +7,6 @@ const productSchema = new mongoose.Schema({
         model: String,
         price: Number
     },
-
-    // discountDetails: [{
-    //     name: String,
-    //     rate: Number
-    // }],
     discountDetails: {
         price: Number,
         discounts: [{ name: String, rate: Number }]
