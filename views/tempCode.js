@@ -388,14 +388,14 @@ router.post("/", (req, res) => {
             }
         }).lean();
 
-        // product.save((err, docs) => {
-        //   if (!err) {
-        //     res.render("admin/indexAdmin", { title: "Add Product", saved: true, brands: saveddocs })
+        product.save((err, docs) => {
+            if (!err) {
+                res.render("admin/indexAdmin", { title: "Add Product", saved: true, brands: saveddocs })
 
-        //   } else {
-        //     res.render("admin/indexAdmin", { title: "Add Product", notSaved: true, brands: saveddocs })
-        //   }
-        // });
+            } else {
+                res.render("admin/indexAdmin", { title: "Add Product", notSaved: true, brands: saveddocs })
+            }
+        });
 
     }))
 });

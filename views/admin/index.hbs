@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PHP - How to make dependent dropdown list using jquery Ajax?</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://demo.itsolutionstuff.com/plugin/bootstrap-3.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">Select State and get bellow Related City</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="title">Select Brand:</label>
+                    <select name="brand" class="form-control">
+                        <option value="">--- Select Brand ---</option>
+                        {{#each brands}}
+                        <option value="{{this.brandName}}">{{this.brandName}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="title">Select City:</label>
+                    <select name="model" class="form-control" style="width:350px">
+                    </select>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        $("select[name='brand']").change(function () {
+            var brandSelected = $(this).val();
+            if (brandSelected) {
+                $.ajax({
+                    url: "/admin/utility/search?brand=" + brandSelected,
+                    dataType: 'Json',
+                    data: { 'id': brandSelected },
+                    type: "POST",
+                    success: function (data) {
+                        $('select[name="model"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="model"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    }
+                });
+
+            } else {
+                $('select[name="model"]').empty();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

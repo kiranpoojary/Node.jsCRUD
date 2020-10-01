@@ -30,9 +30,9 @@
                                 {{/each}}
 
                             </select><input type="text" class="form-control" name="newBrand" id="newBrand"
-                                placeholder="Enter Brand Name" style=" display: none;"></td>
+                                placeholder="Enter Brand Name" style=" display: none;" autocomplete="off"></td>
                         <td><input type="text" placeholder="Model Name" class="form-control" name="modelName"
-                                id="modelName" required>
+                                id="modelName" autocomplete="off" required>
                         </td>
                     </tr>
                 </tbody>
@@ -53,9 +53,16 @@
             </div>
         </div>
         <button class="btn btn-primary" type="submit">Save above Brand/Model</button>
+        <br><br>
+        <strong>
+            <h2 style="color: blue;">Available Brand and Models</h2>
+        </strong>
         <div class="mt-4">
-            <h3><strong>Apple</strong></h3>
-            <h5>hf,sdfi,fsag,yhd d,fdhrd,trs,g sg,,sg,sad</h5>
+            {{#each brands}}
+            <h3><strong>{{this.brandName}}</strong></h3>
+            <h3>{{this.brandModels}} </h3>
+            <br>
+            {{/each}}
         </div>
     </form>
 </body>

@@ -1,248 +1,235 @@
+const { sleep } = require("deasync");
 const deasync = require("deasync");
 const express = require("express");
 const router = express.Router();
 const formidable = require("formidable");
 var fs = require("fs");
 const mongoose = require("mongoose")
-const { resolve } = require("path");
-const { stringify } = require("querystring");
+const path = require("path")
+const multer = require("multer")
+mongoose.set('useFindAndModify', false);
 
 const productModel = new mongoose.model("products")
+const brandModel = new mongoose.model("brands")
+var product = new productModel()
+var saveddocs
 
 router.get("/", (req, res) => {
-  res.render("admin/indexAdmin", { saved: false, notSaved: false })
+  brandModel.find((err, docs) => {
+    if (!err) {
+      res.render("admin/indexAdmin", { title: "Add Product", saved: false, notSaved: false, brands: docs })
+    }
+  }).lean();
+
 });
 
 
-router.post("/", (req, res) => {
+
+
+
+
+router.post('/', (req, res) => {
+
+
   var cat, brand, model
-  var price
   var allDis = []
-  var disName1, disName2, disName3, disName4
-  var disRate1, disRate2, disRate3, disRate4
-  var ram, rom, expand
-  var front, rear
-  var dType, dSize
-  var bType, bCapacity
-  var color1, color2, color3, color4
   var colorArray = []
-  var fAvail, fPositiion, fOnScreen
-  var processorName, confirmed
+  var imgFileName
+  var imageCount = 0
   var savePath
   var rootFolder
-  var form = new formidable.IncomingForm(req);
 
-  form.parse(req, deasync(function (err, fields, files) {
+  var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      cat = req.body.cat
+      brand = req.body.brand
+      model = req.body.model
+      modelDirName = model.split(" ").join("")
+      rootFolder = require("path").resolve(__dirname, "..");
+      savePath = rootFolder + "/public/images/" + cat + "/" + brand + "/" + modelDirName;
+      callback(null, savePath)
+    },
+    filename: function (req, file, callback) {
+      ++imageCount;
+      imgFileName = model.split(" ").join("")
+      callback(null, imgFileName + '-' + imageCount + path.extname(file.originalname))
 
-    cat = fields.cat
-    brand = fields.brand
-    model = fields.model
-
-    price = fields.price
-    disName1 = fields.dn1
-    disName2 = fields.dn2
-    disName3 = fields.dn3
-    disName4 = fields.dn4
-    disRate1 = fields.dr1
-    disRate2 = fields.dr2
-    disRate3 = fields.dr3
-    disRate4 = fields.dr4
-
-
-
-    var dis1 = { name: disName1, rate: disRate1 };
-    var dis2 = { name: disName2, rate: disRate2 };
-    var dis3 = { name: disName3, rate: disRate3 };
-    var dis4 = { name: disName4, rate: disRate4 };
+    }
+  })
 
 
-    temp = (disName1 != '' && disRate1 != 0) ? allDis.push(dis1) : "false"
-    temp = (disName2 != '' && disRate2 != 0) ? allDis.push(dis2) : "false"
-    temp = (disName3 != '' && disRate3 != 0) ? allDis.push(dis3) : "false"
-    temp = (disName4 != '' && disRate4 != 0) ? allDis.push(dis4) : "false"
+  var upload = multer({
+    storage: storage
+  }).any('images')
+  upload(req, res, function (err) {
+    if (!err) {
+      product.productDetails.category = req.body.cat
+      product.productDetails.brand = req.body.brand
+      product.productDetails.model = req.body.model
+      product.productDetails.stock = req.body.stock
+
+      product.discountDetails.price = req.body.price
+
+      temp = (req.body.dn1 != '' && req.body.dr1 != 0) ? allDis.push({ name: req.body.dn1, rate: req.body.dr1 }) : "false"
+      temp = (req.body.dn2 != '' && req.body.dr2 != 0) ? allDis.push({ name: req.body.dn2, rate: req.body.dr2 }) : "false"
+      temp = (req.body.dn3 != '' && req.body.dr3 != 0) ? allDis.push({ name: req.body.dn3, rate: req.body.dr3 }) : "false"
+      temp = (req.body.dn4 != '' && req.body.dr4 != 0) ? allDis.push({ name: req.body.dn4, rate: req.body.dr4 }) : "false"
+
+      product.discountDetails.discounts = allDis
+
+      product.memoryDetails.RAM = req.body.ram
+      product.memoryDetails.ROM = req.body.rom
+      product.memoryDetails.expandable = req.body.expand
+
+      product.cameraDetails.rear = req.body.rear
+      product.cameraDetails.front = req.body.front
+
+      product.displayDetails.disType = req.body.disType
+      product.displayDetails.size = req.body.disSize
+
+      product.batteryDetails.batType = req.body.bType
+      product.batteryDetails.capacity = req.body.bCap
+
+      temp = (req.body.color1 != '') ? colorArray.push(req.body.color1) : "false"
+      temp = (req.body.color2 != '') ? colorArray.push(req.body.color2) : "false"
+      temp = (req.body.color3 != '') ? colorArray.push(req.body.color3) : "false"
+      temp = (req.body.color4 != '') ? colorArray.push(req.body.color4) : "false"
 
 
-    ram = fields.ram
-    rom = fields.rom
-    expand = fields.expand
-    front = fields.rear
-    rear = fields.front
-    dType = fields.disType
-    dSize = fields.disSize
-    bType = fields.bType
-    bCapacity = fields.bCap
-    color1 = fields.color1
-    color2 = fields.color2
-    color3 = fields.color3
-    color4 = fields.color4
 
+      product.colorDetails = colorArray
 
-    temp = (color1 != '') ? colorArray.push(color1) : "false"
-    temp = (color2 != '') ? colorArray.push(color2) : "false"
-    temp = (color3 != '') ? colorArray.push(color3) : "false"
-    temp = (color4 != '') ? colorArray.push(color4) : "false"
-
-    fAvail = fields.availFP
-    fPositiion = fields.fpPosition
-    fOnScreen = fields.fpOnScreen
-    processorName = fields.processorName
-    confirmed = fields.confirmed
-    const product = new productModel();
-
-    product.productDetails.category = cat;
-    product.productDetails.brand = brand;
-    product.productDetails.model = model;
-
-    product.discountDetails.price = price;
-    product.discountDetails.discounts = allDis
-
-    product.memoryDetails.RAM = ram
-    product.memoryDetails.ROM = rom
-    product.memoryDetails.expandable = expand
-
-    product.cameraDetails.rear = rear
-    product.cameraDetails.front = front
-
-    product.displayDetails.disType = dType
-    product.displayDetails.size = dSize
-
-    product.batteryDetails.batType = bType
-    product.batteryDetails.capacity = bCapacity
-
-    product.colorDetails = colorArray;
-
-    product.fingerPrintDetails.avail = fAvail
-    product.fingerPrintDetails.position = fPositiion
-    product.fingerPrintDetails.onscreen = fOnScreen
-
-    product.processorDetails.name = processorName
-
-    //console.log(disName1 + disName2 + disName3 + disName4 + disRate1 + disRate2 + disRate3 + disRate4);
-    // console.log(price + cat + model + brand + ram + rom + expand + front + rear + dType + dSize + bType + bCapacity + colorArray + fAvail + fPositiion + fOnScreen + processorName + confirmed);
-
-
-    product.save((err, docs) => {
-      if (!err) {
-        console.log(docs);
-        res.render("admin/indexAdmin", { saved: true })
+      if (req.body.availFP == "NO") {
+        product.fingerPrintDetails.avail = "NO"
+        product.fingerPrintDetails.position = "NO"
+        product.fingerPrintDetails.onscreen = "NO"
 
       } else {
-
-        res.render("admin/indexAdmin", { notSaved: true })
+        product.fingerPrintDetails.avail = req.body.availFP
+        product.fingerPrintDetails.position = req.body.fpPosition
+        product.fingerPrintDetails.onscreen = req.body.fpOnScreen
       }
-    });
+
+
+      product.processorDetails.name = req.body.processorName
+
+      product.imageCount = imageCount
 
 
 
+      //get brand and models required in bellow render pages
+      brandModel.find((err, docs) => {
+        if (!err) {
+          saveddocs = docs
+        } else {
+          console.log(err);
+        }
+      }).lean();
 
-
-    // files.path = __dirname + files.name;
-    // rootFolder = require("path").resolve(__dirname, "..");
-    // savePath = rootFolder + "/public/images/" + brand + "/" + model + "/";
-    // console.log(savePath);
-    // createDir(savePath).then(function (data) {
-    //   console.log(savePath);
-    //   console.log("save file is remaining");
-    //   saveFile(req, res, savePath).then(function (data) {
-    //     console.log("Done saving file");
-    //     console.log(model + brand);
-    //   })
-    // })
-
-
-
-  }))
-});
-
-
-
-function createDir(savePath) {
-  return new Promise(function (resolve, reject) {
-    if (!fs.existsSync(savePath)) {
-      fs.mkdirSync(savePath, { recursive: true });
-      resolve(console.log("dir created"))
+      productModel.findOneAndUpdate({ model: req.body.model }, { product }, { new: true, upsert: true, strict: false }, (err, docs) => {
+        if (!err) {
+          res.render("admin/indexAdmin", { title: "Add Product", saved: true, brands: saveddocs })
+        } else {
+          console.log(err);
+          res.render("admin/indexAdmin", { title: "Add Product", notSaved: true, brands: saveddocs })
+        }
+      });
     }
-    resolve(console.log("dir exist"))
-
+    else {
+      console.log(err);
+    }
   })
-}
-
-
-
-function saveFile(req, res, savePath) {
-  return new Promise(function (resolve, reject) {
-
-    //write save file snippet
-    console.log("in save File Function " + savePath);
-    resolve(console.log("sssss"))
-  })
-}
-
-module.exports = router;
-
-
-
-
-
-
-
-
-/*
-
-
-//FILE Upload Pending
-
-const deasync = require("deasync");
-const express = require("express");
-const router = express.Router();
-const formidable = require("formidable");
-var fs = require("fs");
-const { resolve } = require("path");
-
-router.get("/", (req, res) => {
-  console.log("hoo");
 });
 
 
-router.post("/", (req, res) => {
+router.get("/addBrand", (req, res) => {
+  brandModel.find((err, docs) => {
+    if (!err) {
+      res.render("admin/addBrandModel", { title: "Add New Brand/Model", brands: docs })
+    } else {
+      console.log(err);
+    }
+  }).lean();
 
-  var brand
-  var model
-  var savePath
-  var rootFolder
-  var form = new formidable.IncomingForm(req);
-  form.parse(req, deasync(function (err, fields, files) {
-    brand = fields.brand
-    model = fields.model
-    console.log(model);
-    files.path = __dirname + files.name;
-    rootFolder = require("path").resolve(__dirname, "..");
-    savePath = rootFolder + "/public/images/" + brand + "/" + model + "/";
+});
+
+
+
+router.post("/addBrand", (req, res) => {
+  var brand = new brandModel();
+  var brandName = req.body.newBrand;
+  var modelName = req.body.modelName;
+  var modelArray = []
+  brandName = brandName.toUpperCase()
+  modelName = modelName.toUpperCase()
+  modelName = brandName + " " + modelName
+  modelDirName = modelName.split(" ").join("")
+  brandModel.countDocuments({ brandName: brandName }, (err, brandCount) => {
+    if (!err && brandCount == 0) {  //if brand not exist
+      modelArray.push(modelName)
+      brand.brandName = brandName;
+      brand.brandModels = modelArray
+      brand.save((err, docs) => {
+        if (!err) {
+          createDir(brandName, modelDirName).then(function (data) {
+            brandModel.find((err, docs) => {
+              if (!err) {
+                res.render("admin/indexAdmin", { title: "Add Product", saved: true, notSaved: false, brands: docs })
+              }
+            }).lean();
+          })
+        } else {
+          brandModel.find((err, docs) => {
+            if (!err) {
+              res.render("admin/indexAdmin", { title: "Add Product", saved: false, notSaved: true, brands: saveddocs })
+            }
+          }).lean();
+        }
+      })
+    } else {
+      brandModel.findOneAndUpdate({ brandName: brandName }, { $push: { brandModels: modelName } }, (err, docs) => {
+        if (!err) {
+          createDir(brandName, modelDirName).then(function (data) {
+            brandModel.find((err, docs) => {
+              if (!err) {
+                res.render("admin/indexAdmin", { title: "Add Product", saved: true, notSaved: false, brands: docs })
+
+              }
+            }).lean();
+          })
+        } else {
+          brandModel.find((err, docs) => {
+            if (!err) {
+              res.render("admin/indexAdmin", { title: "Add Product", saved: false, notSaved: true, brands: saveddocs })
+
+            }
+          }).lean();
+        }
+      })
+
+    }
+
+  })
+
+})
+
+
+
+function createDir(brand, model) {
+  return new Promise(function (resolve, reject) {
+
+    var rootFolder = require("path").resolve(__dirname, "..");
+    var savePath = rootFolder + "/public/images/MOBILE/" + brand + "/" + model + "/";
     console.log(savePath);
-    createDir(savePath).then(function (data) {
-      console.log(savePath);
-      console.log("save file is remaining");
-    })
-  }))
-});
-
-
-
-function createDir(savePath) {
-  return new Promise(function (resolve, reject) {
     if (!fs.existsSync(savePath)) {
       fs.mkdirSync(savePath, { recursive: true });
-      resolve(console.log("dir created"))
+      resolve(console.log("Now Created"))
+    } else {
+      resolve(console.log("already exist directory"))
     }
-    resolve(console.log("dir exist"))
-
   })
 }
 
 
 module.exports = router;
 
-
-
-
-*/

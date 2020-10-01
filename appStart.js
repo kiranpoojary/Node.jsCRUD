@@ -10,6 +10,7 @@ const url = require("url");
 const userAuthController = require("./controllers/loginregister.controller");
 const productController = require("./controllers/product.controller");
 const productCRUDController = require("./controllers/productCRUD.controller");
+const utilityController = require("./controllers/utility.controller")
 
 const app = express();
 
@@ -52,17 +53,9 @@ app.use(express.static("public"));
 app.use("/login", userAuthController);
 app.use("/product", productController);
 app.use("/admin/product", productCRUDController);
+app.use("/admin/utility", utilityController);
 
 
-
-app.use(
-  session({
-    secret: "ssshhhhh",
-    saveUninitialized: true,
-    resave: true,
-    cookie: { maxAge: 60000 },
-  })
-);
 
 app.listen("3000", () => {
   console.log("Server Started at port 3000");

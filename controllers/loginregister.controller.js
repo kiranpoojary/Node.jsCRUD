@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const usersModel = new mongoose.model("users");
 const productModel = new mongoose.model("products")
+const brandModel = new mongoose.model("brands")
 
 var sess;
 
@@ -15,10 +16,7 @@ router.post("/logData", (req, res) => {
   var userID = req.body.userID;
   var password = req.body.password;
   sess = req.session;
-  usersModel.countDocuments({ email: userID, password: password }, function (
-    err,
-    userCount
-  ) {
+  usersModel.countDocuments({ email: userID, password: password }, function (err, userCount) {
     if (!err) {
       if (userCount == 1) {
         //Yes,registered user
@@ -31,7 +29,11 @@ router.post("/logData", (req, res) => {
                 //user is a admin
                 sess.admin = true;
                 sess.logged = true;
-                res.render("admin/indexAdmin", { saved: false, notSaved: false })
+                brandModel.find((err, docs) => {
+                  if (!err) {
+                    res.render("admin/indexAdmin", { title: "Add Product", saved: false, notSaved: false, brands: docs })
+                  }
+                }).lean();
               } else {
                 //else user is a Customer
                 sess.admin = false;

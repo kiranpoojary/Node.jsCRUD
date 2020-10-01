@@ -5,7 +5,8 @@ const productSchema = new mongoose.Schema({
         category: String,
         brand: String,
         model: String,
-        price: Number
+        price: Number,
+        stock: Number
     },
     discountDetails: {
         price: Number,
@@ -38,7 +39,8 @@ const productSchema = new mongoose.Schema({
     },
     processorDetails: {
         name: String,
-    }
+    },
+    imageCount: Number
 })
 
 mongoose.model("products", productSchema)
