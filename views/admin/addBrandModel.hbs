@@ -16,20 +16,24 @@
             <table class="table table-bordered table-hover" id="tab_logic">
                 <thead>
                     <tr>
+                        <th class="text-center">Category</th>
                         <th class="text-center">Brand</th>
                         <th class="text-center">Model</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr id='row1'>
-                        <td><select name="brand" id="brand" onchange="createBrand()" class="form-control">
-                                <option value="">Select existing Brand/add New</option>
-                                <option value="">Add New Brand</option>
-                                {{#each brands}}
-                                <option value="{{brandName}}">{{brandName}}</option>
-                                {{/each}}
-
-                            </select><input type="text" class="form-control" name="newBrand" id="newBrand"
+                        <td> <select name="cat" id="cat" class="form-control">
+                                <option value="Select A Category">Select A Category</option>
+                                <option value="MOBILE">MOBILE</option>
+                                <option value="LAPTOP">LAPTOP</option>
+                                <option value="I-PAD">I-PAD</option>
+                                <option value="OTHER">OTHER</option>
+                            </select></td>
+                        <td>
+                            <select name="brand" id="brand" onchange="createBrand()" required class="form-control">
+                            </select>
+                            <input type="text" class="form-control" name="newBrand" id="newBrand"
                                 placeholder="Enter Brand Name" style=" display: none;" autocomplete="off"></td>
                         <td><input type="text" placeholder="Model Name" class="form-control" name="modelName"
                                 id="modelName" autocomplete="off" required>
@@ -40,7 +44,7 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input is-invalid" onclick="inputChecker()" id="confirmed"
+                <input type="checkbox" class="custom-control-input is-invalid" onchange="inputChecker()" id="confirmed"
                     required>
                 <label class="custom-control-label" for="confirmed">Yes,Iam sure that the above entered model/brand
                     is not exist</label>
@@ -65,6 +69,29 @@
             {{/each}}
         </div>
     </form>
+
+    <script>
+        $("select[name='cat']").change(function () {
+            var catSelected = $(this).val();
+            if (catSelected) {
+                $.ajax({
+                    url: "/admin/utility/searchBrands?cat=" + catSelected,
+                    dataType: 'Json',
+                    data: { 'id': catSelected },
+                    type: "POST",
+                    success: function (data) {
+                        $('select[name="brand"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="brand"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    }
+                });
+
+            } else {
+                $('select[name="brand"]').empty();
+            }
+        });
+    </script>
 </body>
 
 </html>

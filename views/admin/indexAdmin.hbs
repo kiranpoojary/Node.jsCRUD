@@ -65,7 +65,8 @@
                 <div class="col-md-3 mb-3">
 
                     <label for="validationServer013">Product Category</label>
-                    <select name="cat" class="form-control">
+                    <select name="cat" id="cat" class="form-control">
+                        <option value="Select A Category">Select A Category</option>
                         <option value="MOBILE">MOBILE</option>
                         <option value="LAPTOP">LAPTOP</option>
                         <option value="I-PAD">I-PAD</option>
@@ -76,22 +77,13 @@
                 <div class="col-md-3 mb-3">
                     <label for="validationServer023">Brand</label>
                     <select name="brand" class="form-control">
-                        {{#each brands}}
-                        <option value="{{brandName}}">{{brandName}}</option>
-                        {{/each}}
-                    </select>
 
+                    </select>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="validationServer023">Brand</label>
                     <select name="model" class="form-control">
-                        {{#each brands}}
-                        {{#each this.brandModels}}
-                        <option value="{{this}}">{{this}}</option>
-                        {{/each}}
-                        {{/each}}
                     </select>
-
                 </div>
             </div>
 
@@ -199,7 +191,7 @@
             <H2 style="color: rgb(209, 44, 3);">Camera Details</H2>
             <div class="form-row">
                 <div class="col-md-3 mb-3">
-                    <label for="validationServer013">Rear Canera</label>
+                    <label for="validationServer013">Rear Camera</label>
                     <input type="text" name="rear" class="form-control " id="validationServer013"
                         placeholder="Rear Canera">
 
@@ -352,6 +344,55 @@
             <h1>Delete Product</h1>
         </form>
     </div>
+
+
+    <script>
+        $("select[name='cat']").change(function () {
+            var catSelected = $(this).val();
+            var yes = true
+            if (catSelected) {
+                $.ajax({
+                    url: "/admin/utility/searchBrands?cat=" + catSelected + "&needPlaceholder=" + yes,
+                    dataType: 'Json',
+                    data: { 'id': catSelected },
+                    type: "POST",
+                    success: function (data) {
+                        $('select[name="brand"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="brand"]').append('<option value="' + value + '">' + value + '</option>');
+                            //key stores index and value stores the value(text)
+                        });
+                    }
+                });
+            } else {
+                $('select[name="brand"]').empty();
+            }
+        });
+
+        $("select[name='brand']").change(function () {
+            var brandSelected = $(this).val();
+            var catObj = document.getElementById("cat");
+            var catSelected = catObj.options[catObj.selectedIndex].text;
+            if (brandSelected) {
+                $.ajax({
+                    url: "/admin/utility/searchModel?category=" + catSelected + "&brand=" + brandSelected,
+                    dataType: 'Json',
+                    data: { 'id': brandSelected },
+                    type: "POST",
+                    success: function (data) {
+                        $('select[name="model"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="model"]').append('<option value="' + value + '">' + value + '</option>');
+                            //key stores index and value stores the value(text)
+                        });
+                    }
+                });
+
+            } else {
+                $('select[name="model"]').empty();
+            }
+        });
+    </script>
 </body>
 
 </html>

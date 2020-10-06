@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
-const productSchema = new mongoose.Schema({
-    productDetails: {
+const mobileSchema = new mongoose.Schema({
+    mobileDetails: {
         category: String,
         brand: String,
         model: String,
@@ -43,4 +43,4 @@ const productSchema = new mongoose.Schema({
     imageCount: Number
 })
 
-mongoose.model("products", productSchema)
+mongoose.model("mobiles", mobileSchema)

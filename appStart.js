@@ -1,4 +1,4 @@
-const mongoose = require("./model/connection");
+const mongoConnection = require("./model/connection");
 const express = require("express");
 const handlebars = require("express-handlebars");
 const session = require("express-session");
@@ -6,6 +6,8 @@ const path = require("path");
 const bodyparser = require("body-parser");
 const qstring = require("querystring");
 const url = require("url");
+const mongoose = require("mongoose")
+const mobileModel = new mongoose.model("mobiles")
 
 const userAuthController = require("./controllers/loginregister.controller");
 const productController = require("./controllers/product.controller");
@@ -40,20 +42,16 @@ app.use(
 );
 
 
-app.get("/", (req, res) => {
-  res.render("index", { firstGet: 1, title: "Home-ShopName" });
-});
+
 
 app.use(session({ secret: "ssshhhhh", resave: true, saveUninitialized: true }));
-app.use(
-  "/bootstrap",
-  express.static(__dirname + "/node_modules/bootstrap/dist")
-);
+app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
 app.use(express.static("public"));
-app.use("/login", userAuthController);
+app.use("/", userAuthController);
 app.use("/product", productController);
 app.use("/admin/product", productCRUDController);
 app.use("/admin/utility", utilityController);
+
 
 
 

@@ -14,18 +14,26 @@ function createBrand() {
 }
 
 function inputChecker() {
-    var e = document.getElementById("brand");
-    var selectedBrand = e.options[e.selectedIndex].text;
-    var model = document.getElementById("modelName").value;
-    var newBrand = document.getElementById("newBrand").value;
-    if ((selectedBrand == "Select existing Brand/add New")) {
-        alert("Choose a Brand")
-        document.getElementById("confirmed").checked = false
-    } else {
-
-        if ((!model) || (selectedBrand == "Add New Brand") && (!newBrand)) {
-            alert("Fill all fields")
+    var c = document.getElementById("cat");
+    var selectedCat = c.options[c.selectedIndex].text;
+    if (selectedCat != "Select A Category") {
+        var e = document.getElementById("brand");
+        var selectedBrand = e.options[e.selectedIndex].text;
+        if ((selectedBrand != "Select existing Brand/add New")) {
+            var model = document.getElementById("modelName").value;
+            var newBrand = document.getElementById("newBrand").value;
+            if ((!model) || (selectedBrand == "Add New Brand") && (!newBrand)) {
+                alert("brand/model field is empty")
+                document.getElementById("confirmed").checked = false
+            }
+        } else {
             document.getElementById("confirmed").checked = false
+            alert("Select A Brand")
         }
+    } else {
+        document.getElementById("confirmed").checked = false
+        alert("Select A Category")
     }
+
+
 }

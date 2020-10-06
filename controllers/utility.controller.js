@@ -24,30 +24,57 @@ router.get("/", (req, res) => {
 
 
 
-router.post("/search", (req, res) => {
-    var inputBrand = req.query.brand
+router.post("/searchBrands", (req, res) => {
+    var inputCat = req.query.cat
+    var placeHolder = req.query.needPlaceholder
     var data = []
-    var data2 = []
-    var model
+    console.log(placeHolder);
 
-    brandModel.find({ brandName: inputBrand }, { _id: 0, brandModels: 1 }, (err, docs) => {
+    if (placeHolder) {
+        data.push("Select A Brand")
+    } else {
+        data.push("Select existing Brand/add New")
+        data.push("Add New Brand")
+    }
+
+
+    brandModel.find({ brandCategory: inputCat }, { _id: 0, brandName: 1 }, (err, docs) => {
         if (!err) {
-            docs.forEach(element => {
-                element.brandModels.forEach(modelName => {
-                    console.log("pushed " + modelName);
-                    data.push(modelName)
-                })
-                console.log(data);
-            });
+            docs.forEach(br => {
+                data.push(br.brandName);
+            })
             res.end(JSON.stringify(data));
-
         } else {
-
             console.log(err);
         }
     })
 
 })
+
+
+
+
+router.post("/searchModel", (req, res) => {
+
+    var inputBrand = req.query.brand
+    var inputCat = req.query.category
+    console.log(inputBrand + inputCat);
+    var data = []
+    brandModel.find({ brandCategory: inputCat, brandName: inputBrand }, { _id: 0, brandModels: 1 }, (err, docs) => {
+        if (!err) {
+            docs.forEach(element => {
+                element.brandModels.forEach(modelName => {
+                    data.push(modelName)
+                })
+            });
+            res.end(JSON.stringify(data));
+        } else {
+            console.log(err);
+        }
+    })
+
+})
+
 
 
 

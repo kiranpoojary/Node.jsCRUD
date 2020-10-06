@@ -3,16 +3,22 @@ const session = require("express-session");
 const router = express.Router();
 const mongoose = require("mongoose");
 const usersModel = new mongoose.model("users");
-const productModel = new mongoose.model("products")
+const mobileModel = new mongoose.model("mobiles")
 const brandModel = new mongoose.model("brands")
 
 var sess;
 
 router.get("/", (req, res) => {
+  var homeContent = getHomeContent(function (data) {
+    res.render("index", { firstGet: 1, title: "Home-ShopName", mobiles: data });
+  })
+});
+
+router.get("/login", (req, res) => {
   res.render("login", { loginFailed: false, title: "Login/Register" });
 });
 
-router.post("/logData", (req, res) => {
+router.post("/login/logData", (req, res) => {
   var userID = req.body.userID;
   var password = req.body.password;
   sess = req.session;
@@ -39,20 +45,13 @@ router.post("/logData", (req, res) => {
                 sess.admin = false;
                 sess.logged = true;
                 var homeContent = getHomeContent(function (data) {
-                  console.log(data);
+                  res.render("index", { title: "HOME-SHOP", mobiles: data });
                 })
-                console.log(homeContent);
-                res.render("index", { title: "HOME-SHOP" });
               }
             } else {
-              res.render("login", {
-                loginFailed: false,
-                title: "Login / Registration",
-                regFailed: false,
-                regSuccess: false,
-                error: true,
-                errorMessage: err,
-              });
+              var homeContent = getHomeContent(function (data) {
+                res.render("index", { title: "HOME-SHOP", mobiles: data });
+              })
             }
           }
         );
@@ -63,6 +62,7 @@ router.post("/logData", (req, res) => {
           regFailed: false,
           regSuccess: false,
           error: false,
+          mobiles: data
         });
       }
     } else {
@@ -137,7 +137,7 @@ router.post("/regData", (req, res) => {
 
 
 function getHomeContent(dataSender) {
-  productModel.find({ "productDetails.brand": 'Apple' }, function (err, docs) {
+  mobileModel.find(function (err, docs) {
     if (!err) {
       return dataSender(docs)
     } else {

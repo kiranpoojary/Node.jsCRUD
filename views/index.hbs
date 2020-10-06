@@ -9,12 +9,13 @@
 <body>
 	{{> header}}
 	<div class="container">
-		<h3 class="h3">shopping Demo-1 </h3>
+		<h3 class="h3">{{mobiles}} </h3>
 		<div class="row">
+			{{#each mobiles}}
 			<div class="col-md-3 col-sm-6">
 				<div class="product-grid">
 					<div class="product-image">
-						<a href="/product?productID=101">
+						<a href="/product?productCat=MOBILE&productModel=LENOVO K5 NOTE">
 							<img class="pic-1" src="/images/boy1.jpg" alt="No Image">
 							<img class="pic-2" src="/images/boy2.jpg">
 						</a>
@@ -34,7 +35,7 @@
 						<li class="fa fa-star disable"></li>
 					</ul>
 					<div class="product-content">
-						<h3 class="title"><a href="#">Women's Blouse</a></h3>
+						<h3 class="title"><a href="#">{{this.imageCount}}</a></h3>
 						<div class="price">$16.00
 							<span>$20.00</span>
 						</div>
@@ -42,6 +43,7 @@
 					</div>
 				</div>
 			</div>
+			{{/each}}
 			<div class="col-md-3 col-sm-6">
 				<div class="product-grid">
 					<div class="product-image">

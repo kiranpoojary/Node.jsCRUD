@@ -198,3 +198,21 @@
 // Mixed
 // ObjectId
 // Array
+
+
+
+
+
+//fetching  doc[each].column;
+
+ <div class="col-md-3 mb-3">
+                    <label for="validationServer023">Brand</label>
+                    <select name="model" class="form-control">
+                        {{#each brands}}
+                        {{#each this.brandModels}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                        {{/each}}
+                    </select>
+
+                </div>
